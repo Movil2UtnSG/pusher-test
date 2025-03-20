@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Pusher Test</title>
+  <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script>
+
+    function login() {
+      // Enable pusher logging - don't include this in production
+      Pusher.logToConsole = true;
+
+      var pusher = new Pusher('99ac28b6c07939e543bd', {
+        cluster: 'us3',
+        channelAuthorization: {
+          endpoint: "http://127.0.0.1:5000/pusher/auth",
+        }
+      });
+
+      var channel = pusher.subscribe('my-channel');
+      channel.bind('my-event', function (data) {
+        alert(JSON.stringify(data));
+      });
+
+      let channel_id = document.getElementById('channel_id').value;
+
+      var channelPrivate = pusher.subscribe('my-channel-private-' + channel_id);
+      channelPrivate.bind('my-event-private', function (data) {
+        alert(JSON.stringify(data));
+      });
+
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Pusher Test</h1>
+  <p>
+    Try publishing an event to channel <code>my-channel</code>
+    with event name <code>my-event</code>.
+  </p>
+  <p>
+    <input type="text" id="channel_id" placeholder="Channel ID">
+    <button onclick="login()">login</button>
+  </p>
+</body>
